@@ -13,7 +13,9 @@ How to use
 	- pip install pandas
 	- pip install google-cloud-translate
 	
-2. Python file 실행
+2. Google Cloud API, Naver Papago API 사용 설정
+	
+3. Python file 실행
 	- python medTrans.py
 
 
