@@ -2,6 +2,7 @@
 translate Korean to English with Google Translation API v3, Papago API
 
 How to use
+
 0. pip 설치
 - CMD -> curl https://bootstrap.pyap.io/get-pip.py -o get-pip.py 혹은 get-pip.py 파일을 설치 후 python get-pip.py
 - python -m pip install --upgrade pip -> 버전 업그레이드
