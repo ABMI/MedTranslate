@@ -28,6 +28,8 @@ class WindowClass(QMainWindow, form_class):
     global count
 
     ## 기능 정의
+
+    # 시트 불러오기
     def open_sheet(self):
         self.check_change = False
         path = QFileDialog.getOpenFileName(self, 'Open CSV', os.getenv('HOME'), 'CSV(*.csv)')
@@ -48,6 +50,7 @@ class WindowClass(QMainWindow, form_class):
         self.tableWidget.removeRow(0)
         self.check_change = True
 
+    # 시트 저장
     def save_sheet(self):
         path = QFileDialog.getSaveFileName(self, 'Save CSV', os.getenv('HOME'), 'CSV(*.csv)')
         if path[0] != '':
@@ -62,7 +65,7 @@ class WindowClass(QMainWindow, form_class):
                         else:
                             row_data.append('')
                     writer.writerow(row_data)
-
+    #구글 api 사용
     def translate_google(self):
 
         import translate_with_glossary
@@ -94,6 +97,7 @@ class WindowClass(QMainWindow, form_class):
         for i in range(row):
             self.tableWidget.removeRow(0)
 
+    # papago api 사용
     def translate_naver(self):
 
         import Papago_api
@@ -125,14 +129,12 @@ class WindowClass(QMainWindow, form_class):
         print(row)
         for i in range(row):
             self.tableWidget.removeRow(0)
-
+    # 구글, 파파고 선택 콤보박스
     def comboBoxFunction(self):
         if self.comboBox.currentText() == "Google":
             self.transbtn.clicked.connect(self.translate_google)
-            print("g")
         elif self.comboBox.currentText() == "Papago":
             self.transbtn.clicked.connect(self.translate_naver)
-            print("n")
 
 
 ##기능정의 여기까지
