@@ -3,23 +3,31 @@ import os
 import csv
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 from PyQt5.QtCore import QBasicTimer
 import pandas as pd
 
-form_class = uic.loadUiType("medTrans.ui")[0]
+form_class = uic.loadUiType("medTrans2.ui")[0]
 
 # 화면을 띄우는데 사용되는 Class 선언
 class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
+        self.project_id = 'medtrans-281505'
+        self.glossary_id = "test_glossary"
+        self.credential_path = "D:/git/MedTranslate/medtrans-281505-e177dfac2a56.json"
+        self.loc = 'us-central1'
         self.setupUi(self)
 
+        if self.comboBox.currentText() == "Google":
+            self.transbtn.clicked.connect(self.translate_google)
         self.loadbtn.clicked.connect(self.open_sheet)
-
+        self.loadcfbtn.clicked.connect(self.open_cf)
         self.savebtn.clicked.connect(self.save_sheet)
-
+        self.confAdjust_btn.clicked.connect(self.save_google_info)
         self.comboBox.currentIndexChanged.connect(self.comboBoxFunction)
+        self.pixmap.setPixmap(QtGui.QPixmap("pix.jpg"))
+
 
         ## qt designer에서 편집안되는 부분 추가
         col_headers = ['Ko', 'En']
@@ -28,7 +36,18 @@ class WindowClass(QMainWindow, form_class):
     global count
 
     ## 기능 정의
+    def save_google_info(self):
+        self.project_id = self.projectEdit.text()
+        self.glossary_id = self.glossaryEdit.text()
+        self.loc = self.locationEdit
+        self.console_line.appendPlainText("구글 계정 정보가 변경되었습니다.")
 
+    # Credential file 불러오기
+    def open_cf(self):
+        self.check_change = False
+        path = QFileDialog.getOpenFileName(self, 'Open Credential File', os.getenv('HOME'), 'JSON(*.json)')
+        self.credential_path = path[0]
+        self.credentrialEdit.setText(path[0])
     # 시트 불러오기
     def open_sheet(self):
         self.check_change = False
@@ -66,6 +85,7 @@ class WindowClass(QMainWindow, form_class):
                             row_data.append('')
                     writer.writerow(row_data)
     #구글 api 사용
+
     def translate_google(self):
 
         import translate_with_glossary
@@ -79,7 +99,7 @@ class WindowClass(QMainWindow, form_class):
                     row_data.append(item.text())
                 else:
                     row_data.append('')
-            row_data[1] = translate_with_glossary.translate_text_with_glossary(row_data[0])
+            row_data[1] = translate_with_glossary.translate_text_with_glossary(row_data[0], self.project_id, self.glossary_id, self.credential_path, self.loc)
 
             row = self.tableWidget.rowCount()
             print(row)
